@@ -4,6 +4,7 @@ import { Command } from "commander"
 import { ZodError } from "zod"
 
 import { assertNever } from "./assert.js"
+import { resolveGitHubToken } from "./auth.js"
 import { buildMaintainerBrief } from "./brief.js"
 import { fetchGitHubItems } from "./github.js"
 import { readMaintainerItems, writeTextFile } from "./io.js"
@@ -17,10 +18,9 @@ async function loadItems(options: AnalyzeOptions): Promise<readonly MaintainerIt
   }
 
   if (options.repo !== undefined) {
+    const token = resolveGitHubToken(options, process.env)
     const fetchOptions =
-      options.token === undefined
-        ? { limit: options.limit }
-        : { limit: options.limit, token: options.token }
+      token === undefined ? { limit: options.limit } : { limit: options.limit, token }
 
     return await fetchGitHubItems(options.repo, fetchOptions)
   }
@@ -70,7 +70,7 @@ export async function runCli(argv: readonly string[]): Promise<void> {
     .option("--limit <count>", "Maximum GitHub items to fetch.", "50")
     .option("--output <path>", "Write the report to a file instead of stdout.")
     .option("--repo <owner/name>", "GitHub repository to analyze.")
-    .option("--token <token>", "GitHub token for private repositories or higher rate limits.")
+    .option("--token <token>", "GitHub token. Prefer GITHUB_TOKEN for regular use.")
     .action(analyze)
 
   await program.parseAsync([...argv], {

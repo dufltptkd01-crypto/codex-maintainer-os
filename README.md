@@ -44,10 +44,24 @@ bun run src/cli.ts analyze \
 Use a token for private repositories or higher rate limits:
 
 ```bash
-bun run src/cli.ts analyze \
-  --repo owner/repo \
-  --token "$GITHUB_TOKEN"
+GITHUB_TOKEN="$GITHUB_TOKEN" bun run src/cli.ts analyze --repo owner/repo
 ```
+
+You can still pass `--token` for one-off use, but `GITHUB_TOKEN` avoids putting secrets in shell history.
+
+## GitHub Action
+
+Codex Maintainer OS can run as a scheduled GitHub Action:
+
+```yaml
+- uses: dufltptkd01-crypto/codex-maintainer-os@main
+  with:
+    repo: ${{ github.repository }}
+    output: maintainer-os-report.md
+    token: ${{ secrets.GITHUB_TOKEN }}
+```
+
+See [docs/github-action.md](docs/github-action.md) for a complete workflow.
 
 ## Example Output
 
@@ -111,6 +125,7 @@ The check command runs:
 
 ## Roadmap
 
+- Model-assisted issue summaries and reproducer prompts.
 - GitHub issue comment drafts for maintainer approval.
 - GitHub Actions scheduled backlog reports.
 - PR diff ingestion and richer review heuristics.

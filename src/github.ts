@@ -3,11 +3,14 @@ import { z } from "zod"
 
 import type { MaintainerItem, RepositoryFullName } from "./schemas.js"
 
-const GitHubLabelSchema = z.object({
-  name: z.string().nullable(),
-})
+const GitHubLabelSchema = z.union([
+  z.string(),
+  z.object({
+    name: z.string().nullable(),
+  }),
+])
 
-const GitHubIssueSchema = z.object({
+export const GitHubIssueSchema = z.object({
   body: z.string().nullable(),
   comments: z.number().int().min(0),
   created_at: z.string(),
@@ -28,6 +31,7 @@ const GitHubIssueSchema = z.object({
 const GitHubIssuesSchema = z.array(GitHubIssueSchema)
 
 type GitHubIssue = z.infer<typeof GitHubIssueSchema>
+type GitHubLabel = z.infer<typeof GitHubLabelSchema>
 
 type FetchGitHubItemsOptions = {
   readonly limit: number
@@ -50,7 +54,15 @@ function headersForToken(token: string | undefined): Record<string, string> {
   }
 }
 
-function toMaintainerItem(issue: GitHubIssue): MaintainerItem {
+function labelName(label: GitHubLabel): string | null {
+  if (typeof label === "string") {
+    return label
+  }
+
+  return label.name
+}
+
+export function toMaintainerItem(issue: GitHubIssue): MaintainerItem {
   return {
     author: issue.user?.login ?? null,
     body: issue.body,
@@ -58,7 +70,7 @@ function toMaintainerItem(issue: GitHubIssue): MaintainerItem {
     createdAt: issue.created_at,
     htmlUrl: issue.html_url,
     itemType: issue.pull_request === undefined ? "issue" : "pull_request",
-    labels: issue.labels.map((label) => label.name).filter((label) => label !== null),
+    labels: issue.labels.map(labelName).filter((label): label is string => label !== null),
     number: issue.number,
     state: issue.state,
     title: issue.title,

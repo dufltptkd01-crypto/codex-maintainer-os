@@ -1,3 +1,4 @@
+export { resolveGitHubToken } from "./auth.js"
 export { buildMaintainerBrief } from "./brief.js"
 export { fetchGitHubItems } from "./github.js"
 export { readMaintainerItems } from "./io.js"
