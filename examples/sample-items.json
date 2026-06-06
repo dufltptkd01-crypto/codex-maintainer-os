@@ -1,0 +1,48 @@
+{
+  "items": [
+    {
+      "number": 42,
+      "title": "Potential token leak in debug logs",
+      "body": "Debug mode may expose authorization tokens in CI logs. Please verify impact and patch.",
+      "htmlUrl": "https://github.com/example/project/issues/42",
+      "labels": ["security", "bug"],
+      "author": "security-reporter",
+      "state": "open",
+      "itemType": "issue",
+      "comments": 3
+    },
+    {
+      "number": 17,
+      "title": "Regression: 2.4.0 breaks Windows path handling",
+      "body": "Release candidate fails on paths with spaces. This blocks the next patch release.",
+      "htmlUrl": "https://github.com/example/project/issues/17",
+      "labels": ["regression", "release-blocker"],
+      "author": "windows-maintainer",
+      "state": "open",
+      "itemType": "issue",
+      "comments": 8
+    },
+    {
+      "number": 51,
+      "title": "Add cache adapter for package metadata",
+      "body": "Implements a new adapter and needs review for compatibility with existing lockfiles.",
+      "htmlUrl": "https://github.com/example/project/pull/51",
+      "labels": ["enhancement"],
+      "author": "contributor-a",
+      "state": "open",
+      "itemType": "pull_request",
+      "comments": 11
+    },
+    {
+      "number": 8,
+      "title": "README install example is stale",
+      "body": "The quickstart still references the old binary name.",
+      "htmlUrl": "https://github.com/example/project/issues/8",
+      "labels": ["documentation"],
+      "author": "new-user",
+      "state": "open",
+      "itemType": "issue",
+      "comments": 1
+    }
+  ]
+}
